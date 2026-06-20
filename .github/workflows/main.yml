@@ -1,29 +1,30 @@
-# Workflow [No indentation required for naming the workflow]
-
-name: Hello
-
-# On tells when the workflow should run (Give indentation by tab)
+name: CICD 
 
 on:
-
-workflow_dispatch:
-
-# Job tells what the workflow should do, there can be one or more than one jobs, hence we write jobs
-
-# jobs is an object so needs indentation
+  workflow_dispatch:
 
 jobs:
-
-# first job gives indentation
-
-say-hello:
-
-#creates and ephermal container with Ubuntu running
-
-runs-on: ubuntu-latest
-
-steps:
-
-- name: Say hello to everyone
-
-run: echo "Hello Dosto"
+  code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the Code
+        run: echo "Cloning the Code"
+  build:
+    needs: [code]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build using Docker
+        run: echo "Building using Docker"
+  test:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Running test cases
+        run: echo "Testing the app"
+  
+  deploy:
+    needs: [build,test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploying on the machine
+        run: echo "Deploying the code"
